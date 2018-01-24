@@ -1,5 +1,8 @@
 # spring-boot-eureka-hystrix-example
-Projects that provide examples on creating microservices, registering with eureka server, use eureka service discovery to talk to each other. Also has examples on using Hystrix for adding fall back methods 
+Projects that provide examples on creating microservices, registering with eureka server, use eureka service discovery to talk to each other. Also has examples on using Hystrix for adding fall back methods, Swagger for REST end point documentation.
+
+Refer to the Wiki page for more detailed information
+https://github.com/agundavaram/spring-boot-eureka-hystrix-example/wiki
 
 This example contains the examples on the following
 
@@ -9,6 +12,7 @@ This example contains the examples on the following
 4. making synchronous/asynchronous(both AsyncRestTemplate and @Async) between microservices
 5. adding custom executors, custom exception handlers, callback methods for asynchronous calls
 6. adding fall back method using Hystrix
+7. adding REST API documentation using Swagger
 
 The above are all illustrated through simple end points in the AuthorController. The an overarching theme for this example is to have author microservice 
 talk to book-service and award-service to retrieve information needed to display the author information. The REST end points exposed in the AuthorController 
