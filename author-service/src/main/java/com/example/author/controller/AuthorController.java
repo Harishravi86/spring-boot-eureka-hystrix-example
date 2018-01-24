@@ -93,11 +93,11 @@ public class AuthorController {
     // this is an example of making asychrnous calls when the method being invoked is not annotated with @Async
     @ApiOperation(value = "View author information including books authored and awards received given author name", response = Author.class)
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Successfully retrieved author"),
-            @ApiResponse(code = 401, message = "You are not authorized to view the resource"),
-            @ApiResponse(code = 403, message = "Accessing the resource you were trying to reach is forbidden"),
-            @ApiResponse(code = 404, message = "The resource you were trying to reach is not found")
-            }
+				            @ApiResponse(code = 200, message = "Successfully retrieved author"),
+				            @ApiResponse(code = 401, message = "You are not authorized to view the resource"),
+				            @ApiResponse(code = 403, message = "Accessing the resource you were trying to reach is forbidden"),
+				            @ApiResponse(code = 404, message = "The resource you were trying to reach is not found")
+				           }
     )
     @RequestMapping(value = "async/author/{name}", method = RequestMethod.GET)
     public Author getAuthorInformation(@PathVariable(value="name") String name) throws InterruptedException, ExecutionException {

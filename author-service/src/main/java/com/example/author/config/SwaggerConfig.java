@@ -17,6 +17,7 @@ public class SwaggerConfig {
 				
                 .select()         
                 .apis(RequestHandlerSelectors.basePackage("com.example.author.controller"))
+                //.paths(predicate)
                 .build();
              
     }

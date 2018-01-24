@@ -351,7 +351,7 @@ To add Swagger documentation to REST end points add the following annotations to
             @ApiResponse(code = 401, message = "You are not authorized to view the resource"),
             @ApiResponse(code = 403, message = "Accessing the resource you were trying to reach is forbidden"),
             @ApiResponse(code = 404, message = "The resource you were trying to reach is not found")
-    }
+     }
     )
      
 	Once the author-service is up the documentation should be available at
