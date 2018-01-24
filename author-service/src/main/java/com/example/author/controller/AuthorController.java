@@ -24,7 +24,12 @@ import com.example.author.entity.Award;
 import com.example.author.entity.Book;
 import com.example.author.service.AuthorService;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 
+@Api(value="Author Information", description="This provides the API for retrieving author information")
 @RestController
 public class AuthorController {
 	
@@ -86,6 +91,14 @@ public class AuthorController {
 	 * When making call from the postman or any external system we need to know the IP address and port and cannot use the microservice app name to call
 	 */
     // this is an example of making asychrnous calls when the method being invoked is not annotated with @Async
+    @ApiOperation(value = "View author information including books authored and awards received given author name", response = Author.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Successfully retrieved author"),
+            @ApiResponse(code = 401, message = "You are not authorized to view the resource"),
+            @ApiResponse(code = 403, message = "Accessing the resource you were trying to reach is forbidden"),
+            @ApiResponse(code = 404, message = "The resource you were trying to reach is not found")
+    }
+    )
     @RequestMapping(value = "async/author/{name}", method = RequestMethod.GET)
     public Author getAuthorInformation(@PathVariable(value="name") String name) throws InterruptedException, ExecutionException {
     	Author author = new Author(name, 35L, 'M');
