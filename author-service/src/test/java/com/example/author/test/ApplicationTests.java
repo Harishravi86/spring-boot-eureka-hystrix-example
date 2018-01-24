@@ -1,4 +1,4 @@
-package hello;
+package com.example.author.test;
 
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
