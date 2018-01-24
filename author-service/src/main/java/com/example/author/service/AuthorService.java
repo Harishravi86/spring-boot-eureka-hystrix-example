@@ -14,9 +14,9 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import com.example.author.entity.Address;
-import com.example.author.entity.Author;
-import com.example.author.entity.Book;
+import com.example.author.model.Address;
+import com.example.author.model.Author;
+import com.example.author.model.Book;
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 
 @Service

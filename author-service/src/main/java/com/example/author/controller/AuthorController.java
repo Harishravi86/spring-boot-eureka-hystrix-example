@@ -18,10 +18,10 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.AsyncRestTemplate;
 import org.springframework.web.client.RestTemplate;
 
-import com.example.author.entity.Address;
-import com.example.author.entity.Author;
-import com.example.author.entity.Award;
-import com.example.author.entity.Book;
+import com.example.author.model.Address;
+import com.example.author.model.Author;
+import com.example.author.model.Award;
+import com.example.author.model.Book;
 import com.example.author.service.AuthorService;
 
 import io.swagger.annotations.Api;

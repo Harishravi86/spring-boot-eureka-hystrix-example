@@ -1,13 +1,17 @@
-package com.example.award.entity;
+package com.example.author.model;
 
 import java.io.Serializable;
 import java.util.Date;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 public class Award implements Serializable{
 	
 	private static final long serialVersionUID = 1L;
 	private String bookName;
 	private String authorName;
+	
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm a z")
 	private Date awardedTS;
 	
 	public Award() {
