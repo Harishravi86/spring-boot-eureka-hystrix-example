@@ -354,6 +354,5 @@ To add Swagger documentation to REST end points add the following annotations to
     }
     )
      
-     
 	Once the author-service is up the documentation should be available at
 	http://localhost:8092/swagger-ui.html

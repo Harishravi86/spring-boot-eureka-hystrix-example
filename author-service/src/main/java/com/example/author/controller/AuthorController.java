@@ -97,7 +97,7 @@ public class AuthorController {
             @ApiResponse(code = 401, message = "You are not authorized to view the resource"),
             @ApiResponse(code = 403, message = "Accessing the resource you were trying to reach is forbidden"),
             @ApiResponse(code = 404, message = "The resource you were trying to reach is not found")
-    }
+            }
     )
     @RequestMapping(value = "async/author/{name}", method = RequestMethod.GET)
     public Author getAuthorInformation(@PathVariable(value="name") String name) throws InterruptedException, ExecutionException {
