@@ -1,7 +1,7 @@
 # spring-boot-eureka-hystrix-example
 Projects that provide examples on creating microservices, registering with eureka server, use eureka service discovery to talk to each other. Also has examples on using Hystrix for adding fall back methods, Swagger for REST end point documentation.
 
-Refer to the Wiki page below for more detailed information
+Refer to the Wiki page for more detailed information
 https://github.com/agundavaram/spring-boot-eureka-hystrix-example/wiki
 
 This example contains the examples on the following
