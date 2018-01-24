@@ -1,314 +1,323 @@
-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-														     Spring boot configuration for Eureka Server/Client, Hystrix Circuit Breaker
-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+## Spring boot configuration for Eureka Server/Client, Hystrix Circuit Breaker
 
-Eureka Client:
+### Eureka Client:
 	1. If creating a new project which will be a Eureka client
-		Create new spring starter project
-		select eureka discovery client
-		This step creates the microservice along with a *Application.java and application.properties file
-		
-		Else
-		 edit existing pom and add the following dependency
-		 <dependency>
-			<groupId>org.springframework.cloud</groupId>
-			<artifactId>spring-cloud-starter-eureka</artifactId>
-		</dependency>
+			Create new spring starter project
+			select eureka discovery client
+			This step creates the microservice along with a *Application.java and application.properties file
+			
+			Else
+			 edit existing pom and add the following dependency
+				 <dependency>
+					<groupId>org.springframework.cloud</groupId>
+					<artifactId>spring-cloud-starter-eureka</artifactId>
+				</dependency>
 		
 		* More dependencies might need to be added
-	2. Edit pom
-		add 
+		
+	2. Edit pom.xml to add the following dependency
+			 
 			<dependency>
-					<groupId>org.springframework.boot</groupId>
-					<artifactId>spring-boot-starter-actuator</artifactId>
+			      <groupId>org.springframework.boot</groupId>
+			      <artifactId>spring-boot-starter-actuator</artifactId>
 			</dependency>
 	 
 	3. Edit application.properties  
-		If present change to .yml 
-		Else add application.yml file under src/main/resources
-		
-		add below properties
-		----------------------------------------- BEGIN -------------------------------------------------
-		eureka:
-		instance:
-			leaseRenewalIntervalInSeconds: 1
-			leaseExpirationDurationInSeconds: 2
-		client:
-			serviceUrl:
-			defaultZone: http://localhost:8761/eureka/
-			// TODO: healthcheck and lease might not be available any more. STS was giving a warning, check this and update the properties as needed. Also explain each property being used
-			healthcheck:
-			enabled: true
-		lease:
-			duration: 5
-	 
-		spring:
-			application:
-				name: author-service
-		
-		server:
-			port: 8092
-		------------------------------------------ END ---------------------------------------------------
-		
-		make sure port is unique, else it will not start up
-		make sure name is unique, as it is used to identify the microservice in the Eureka server
+			If present change to .yml 
+			Else add application.yml file under src/main/resources
+			
+			add below properties
+			----------------------------------------- BEGIN ----------------------------------------
+				eureka:
+				instance:
+					leaseRenewalIntervalInSeconds: 1
+					leaseExpirationDurationInSeconds: 2
+				client:
+					serviceUrl:
+					defaultZone: http://localhost:8761/eureka/
+					// NOTE: healthcheck and lease might not be available any more
+					healthcheck:
+					enabled: true
+				lease:
+					duration: 5
+			 
+				spring:
+					application:
+						name: author-service
+				
+				server:
+					port: 8092
+			------------------------------------------ END -------------------------------------------
+			
+			make sure port is unique, else it will not start up
+			make sure name is unique, as it is used to identify the microservice in the Eureka server
 	
 	4. Edit the *Application.java 
-       Make sure the *Application class is annotated with @EnableDiscoveryClient	
+     	  Make sure the *Application class is annotated with @EnableDiscoveryClient	
 
-Eureka Server:
+### Eureka Server:
+
 	1. If creating a new project which will be a Eureka client
-		Create new spring starter project
-		select eureka server
-		This step creates the microservice along with a *Application.java and application.properties file
+			Create new spring starter project
+			select eureka server
+			This step creates the microservice along with a *Application.java and application.properties file
 		
 		Else
-		 edit existing pom and add the following dependency
-		 <dependency>
-			<groupId>org.springframework.cloud</groupId>
-			<artifactId>spring-cloud-starter-eureka-server</artifactId>
-		</dependency>
-	
-		* More dependencies might need to be added
-	2. Edit application.properties  
-		If present change to .yml 
-		Else add application.yml file under src/main/resources
+			 edit existing pom and add the following dependency
+			 <dependency>
+				<groupId>org.springframework.cloud</groupId>
+				<artifactId>spring-cloud-starter-eureka-server</artifactId>
+			</dependency>
 		
-		add below properties
-		----------------------------------------- BEGIN -------------------------------------------------
-		server:
-		  port: 8761
-
-		eureka:
-		  instance:
-			hostname: localhost
-		  client:
-			registerWithEureka: FALSE
-			fetchRegistry: FALSE
-			serviceUrl:
-			  defaultZone: http://${eureka.instance.hostname}:${server.port}/eureka/
-			  
-		spring:
-		  application:
-			name: eureka-service
-		------------------------------------------ END ---------------------------------------------------
+		* More dependencies might need to be added
+		
+	2. Edit application.properties  
+			If present change to .yml 
+			Else add application.yml file under src/main/resources
+			
+			add below properties
+			----------------------------------------- BEGIN ----------------------------------------
+				server:
+				  port: 8761
+				  eureka:
+				  instance:
+					hostname: localhost
+				  client:
+					registerWithEureka: FALSE
+					fetchRegistry: FALSE
+					serviceUrl:
+					  defaultZone: http://${eureka.instance.hostname}:${server.port}/eureka/
+					  
+				spring:
+				  application:
+					name: eureka-service
+			------------------------------------------ END -------------------------------------------
 		
 	3. Edit the *Application.java 
-       Make sure the *Application class is annotated with @EnableEurekaServer	
+     	  Make sure the *Application class is annotated with @EnableEurekaServer	
 		
-Starting the Eureka server/client
+### Starting the Eureka server/client
 
 	1. To start the server, run the *Application.java in the server project as a Spring Boot Application
-		To check if the server is up go to http://localhost:8761/ 
-		Eureka homepage with no registered clients should show up
-	2. To start the client, run the *Application.java in the client project as a Spring Boot Application
-		To check if the server is up go to http://localhost:8761/ 
-		Eureka homepage with registered clients should show up
+			To check if the server is up go to http://localhost:8761/ 
+			Eureka homepage with no registered clients should show up
 		
-	To debug start the clients in debug mode, by debugging the application as a Spring Boot Application (*Application.java -> right click -> Debug -> Spring Boot Application)
+	2. To start the client, run the *Application.java in the client project as a Spring Boot Application
+			To check if the server is up go to http://localhost:8761/ 
+			Eureka homepage with registered clients should show up
+		
+	To debug start the clients in debug mode, by debugging the application as a Spring Boot Application 
+	(*Application.java -> right click -> Debug -> Spring Boot Application)
 	
-Hystrix
+### Hystrix
 
 To add circuit-breaker/fallbacks to service end points in a microservice
+
 	1. Edit pom.xml add following dependency
-		<dependency>
-			<groupId>org.springframework.cloud</groupId>
-			<artifactId>spring-cloud-starter-netflix-hystrix</artifactId>
-		</dependency>
+			<dependency>
+				<groupId>org.springframework.cloud</groupId>
+				<artifactId>spring-cloud-starter-netflix-hystrix</artifactId>
+			</dependency>
 		
 	2. Edit the *Application.java
-	   Make sure the *Application class is annotated with @EnableCircuitBreaker 
+	  	 Make sure the *Application class is annotated with @EnableCircuitBreaker 
+	   
+### Swagger
 
-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-																	  Creating entities and REST end points
-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+	1. Edit the pom.xml to add the following dependencies
+			<dependency>
+				<groupId>io.springfox</groupId>
+				<artifactId>springfox-swagger2</artifactId>
+				<version>2.6.1</version>
+				<scope>compile</scope>
+			</dependency>
+			<dependency>
+			    <groupId>io.springfox</groupId>
+			    <artifactId>springfox-swagger-ui</artifactId>
+			    <version>2.6.1</version>
+			    <scope>compile</scope>
+			</dependency>
+		
+	2. Add the Configuration file for Swagger
+		   The configuration file for Swagger must have the below annotations
+		   a. @Configuration
+	           b. @EnableSwagger2
+	      
+	      In the example look at SwaggerConfig for more information	   
 
-Creating POJO
-  make sure they implement Serializable interface
-  if adding a param constructor, make sure to add the default no param constructor as well
-   * In Java, a default no param constructor is provided for every class. However if a constructor is explicitly defined then the default no param constructor is no longer available. 
+## Creating entities and REST end points
+
+### Creating POJO
+  A simple POJO will serve as an entity to save/retrieve perform all REST actions provided the below rules are enforced
+  * Make sure all POJO's implement Serializable interface
+  * If adding a param constructor, make sure to add the default no param constructor as well
+   *  In Java, a default no param constructor is provided for every class. However if a constructor is explicitly defined then the default no param constructor is no longer available. 
    * The no param constructor and getter/setter methods are used by JSON parser to marshal/unamarshall the object 
    * Ensure data fileds are encapsulated i.e. all variables are defined as private and have getter/setter methods to access/change their values
    
-Creating REST end points
-   any java class with the @RestController is treated as a rest controller
-   a method with @RequestMapping is treated as a REST end point , accessable by the path defined in @RequestMapping like in below example the path would be http://localhost:8080/award/list/winner/name/nspark
-   @RequestMapping(value = "/award/list/winner/name/{name}", method = RequestMethod.GET)
+### Creating REST end points
+   Any java class with the @RestController is treated as a rest controller. A method with @RequestMapping is treated as a REST end point, accessible by the path defined in @RequestMapping. In below example the path would be http://localhost:8080/award/list/winner/name/nspark
+
+	@RequestMapping(value = "/award/list/winner/name/{name}", method = RequestMethod.GET)
    
    In the above example, we are taking name as input. To bind a method param to the incoming value we use the @PathVariable(value="name") where the value indicates the value of the variable "name" in the incoming url
    
    The complete signature of the method will be like below
    
-   @RequestMapping(value = "/award/list/winner/name/{name}", method = RequestMethod.GET)
-   public List<Award> getAwardByWinnerName(@PathVariable(value="name") String name)
+    @RequestMapping(value = "/award/list/winner/name/{name}", method = RequestMethod.GET)
+    public List<Award> getAwardByWinnerName(@PathVariable(value="name") String name)
+
    
-Interacting with other microservices 
+## Interacting with other microservices 
    To interact with other microservice we need to use a load balancing client and use a rest template like below
    
-   Synchronous: 
+   ### Synchronous: 
    
-   1. We need to create a Config class. Any class can be used for configuration as long as the class is annotated with @Configuration. In the example the Config.java class is annotated with @Configuration
+	 1. We need to create a Config class.
+	      Any class can be used for configuration as long as the class is annotated	with @Configuration.
+	      In the example the Config.java class is annotated with @Configuration like below
+	   
+		 	@Configuration
+			public class Config
    
-   2. We need to create a RestTemplate bean like below
-		@LoadBalanced
-		@Bean
-		public RestTemplate restTemplate() {
-			return new RestTemplate();
-		}
-		
-   3. In the rest controller autowire the rest template like below
+	 2. We need to create a RestTemplate bean like below
+			@LoadBalanced
+			@Bean
+			public RestTemplate restTemplate() {
+				return new RestTemplate();
+			}              
+
+
+	3. In the rest controller autowire the rest template like below
+			@Autowired
+			private RestTemplate restTemplate;
+				
+			Since we defined the rest template bean in the configuration file, Spring will inject the rest template at run
+			time. So all we need to do give the bean definition and autowire the bean into a variable!
+			 
+			Only microservices that need to interact with another microservice needs to define this configuration.
+			In our example, only author-service has this defined as only author service is talking to
+			both book-service and award-service
+
+    4. Now that the restTemplate is available to us, we need to make the following call
+	       List<Award> awardsReceived  =  restTemplate.exchange(
+									   "http://award-service/award/list/winner/{name}",
+										HttpMethod.GET,
+										null,
+										new ParameterizedTypeReference<List<Award>>() {}, 
+										name)
+										.getBody();
    
-    @Autowired
-    private RestTemplate restTemplate;
-	
-	Since we defined the rest template bean in the configuration file, Spring will inject the rest template at run time. So all we need to do give the bean defination and autowire the bean into a variable!
- 
-    Only microservices that need to interact with another microservice needs to define this configuration
-	In our example, only author-serivce has this defined as only author service is talking to both book-service and award-service
-	
-  4. Now that the restTemplate is available to us, we need to make the following call
-  
-    List<Award> awardsReceived  =  restTemplate.exchange(
-								   "http://award-service/award/list/winner/{name}",
-									HttpMethod.GET,
-									null,
-									new ParameterizedTypeReference<List<Award>>() {}, 
-									name).getBody();
    
-   Lets take a deeper look at the exchange method signature
-   
-   
-   // TODO : add more on the method signature
-   
-   Asynchronous:
+   ### Asynchronous
    
    There are multiple ways to do asynchronous calls
    
     1. Using the AsyncRestTemplate 
-	 Similar to the restTemplate used above, we have to define a AsyncRestTemaplate bean which can autowired and used in the service
+		 	Similar to the restTemplate used above, we have to define a AsyncRestTemaplate bean which can autowired
+		 	and used in the service
 		
-		@LoadBalanced
-		@Bean
-		public AsyncRestTemplate aysncRestTemplate() {
-			return new AsyncRestTemplate();
-		}
-		
-		In the controller/service we can then inject this template like below
-		@Autowired
-	    private AsyncRestTemplate asyncRestTemplate;
-		
-		ListenableFuture<ResponseEntity<List<Book>>> future = asyncRestTemplate.exchange(
-		"http://book-service/async/book/author/{name}",
-		HttpMethod.GET,
-		null,
-		new ParameterizedTypeReference<List<Book>>() {}, 
-		name);
-    	
-    	author.setBooksAuthored(future.get().getBody());
-   
-	    // TODO: verify below statement is true
-		The response for the asyncRestTemplate exchange method is a ListenableFuture type. The exchange is non-blocking call while the get() method called on the future object is a blocking call
+			@LoadBalanced
+			@Bean
+			public AsyncRestTemplate aysncRestTemplate() {
+				return new AsyncRestTemplate();
+			}
+			
+			In the controller/service we can then inject this template like below
+			@Autowired
+		        private AsyncRestTemplate asyncRestTemplate;
+			
+			ListenableFuture<ResponseEntity<List<Book>>> future = asyncRestTemplate.exchange(
+			"http://book-service/async/book/author/{name}",
+			HttpMethod.GET,
+			null,
+			new ParameterizedTypeReference<List<Book>>() {}, 
+			name);
+	    	
+	        	author.setBooksAuthored(future.get().getBody());
+		    // Note source: https://stackoverflow.com/a/35293277
+			The response for the asyncRestTemplate exchange method is a ListenableFuture type. The exchange is
+			non-blocking call while the get() method called on the future object is a blocking call
    
     2. Using the @Aysnc annotation
-	   a. The Application class needs to be annotated with @EnableAsync method
-	   b. We can use the default executor or define our own executor as a Bean. In the example we have done so in the Config class like below
-	    @Bean
-		@Qualifier("author-executor")
-		public Executor asyncExecutor() {
-			ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
-			executor.setCorePoolSize(2);
-			executor.setMaxPoolSize(2);
-			executor.setQueueCapacity(500);
-			executor.initialize();
-			return executor;
-		}
-		 
-		The @Qualifier is used to bind the executor to the name given and this name can be used by the @Aysnc annotation to execute the method in the given executor
+		   a. The Application class needs to be annotated with @EnableAsync method
+		   b. We can use the default executor or define our own executor as a Bean. In the example we have
+		   done so in the Config class like below
+			   @Bean
+				@Qualifier("author-executor")
+				public Executor asyncExecutor() {
+					ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
+					executor.setCorePoolSize(2);
+					executor.setMaxPoolSize(2);
+					executor.setQueueCapacity(500);
+					executor.initialize();
+					return executor;
+				}
+			 
+			The @Qualifier is used to bind the executor to the name given and this name can be used by
+			the @Aysnc annotation to execute the method in the given executor
 		
 	   c. We can use the annotation @Async on the method we want to be always called asynchronously
 	    
-		@Async("author-executor")
-		public CompletableFuture<Author> getAuthorDemographics(String name) throws InterruptedException {
-			Author author = new Author(name, 35L, 'M');
-			Thread.sleep(5000l);
-			return CompletableFuture.completedFuture(author);
-		}
-		
-		We can also call other microservice like below
-		@Async("author-executor")
-		public CompletableFuture<List<Book>> getAuthoredBooks(String name) throws InterruptedException {
-			List<Book> books = restTemplate.exchange(
-					"http://book-service/book/author/{name}",
-					HttpMethod.GET,
-					null,
-					new ParameterizedTypeReference<List<Book>>() {}, 
-					name).getBody();
-			Thread.sleep(1000l);
-			return CompletableFuture.completedFuture(books);
-		}
+			@Async("author-executor")
+			public CompletableFuture<Author> getAuthorDemographics(String name) throws InterruptedException {
+				Author author = new Author(name, 35L, 'M');
+				Thread.sleep(5000l);
+				return CompletableFuture.completedFuture(author);
+			}
+			
+			We can also call other microservice like below
+			@Async("author-executor")
+			public CompletableFuture<List<Book>> getAuthoredBooks(String name) throws InterruptedException {
+				List<Book> books = restTemplate.exchange(
+						"http://book-service/book/author/{name}",
+						HttpMethod.GET,
+						null,
+						new ParameterizedTypeReference<List<Book>>() {}, 
+						name).getBody();
+				Thread.sleep(1000l);
+				return CompletableFuture.completedFuture(books);
+			}
 	   
-	   d. In the controller we can call multiple async methods paralley and wait for all of them to come back before proceeding further. This can be achieved by below code snippet
-	    
+	   d. In the controller we can call multiple async methods paralley and wait for all of them to come back before 
+	      proceeding further. This can be achieved by below code snippet
+		    
 		// We make three calls to get various information related to author
-		CompletableFuture<Author> authorInfo = authorService.getAuthorDemographics(name);
-    	CompletableFuture<Address> addressInfo = authorService.getAuthorAddress(name);
-    	CompletableFuture<List<Book>> booksAuthored = authorService.getAuthoredBooks(name);
+			CompletableFuture<Author> authorInfo = authorService.getAuthorDemographics(name);
+	    	CompletableFuture<Address> addressInfo = authorService.getAuthorAddress(name);
+	    	CompletableFuture<List<Book>> booksAuthored = authorService.getAuthoredBooks(name);
+			
+			// the executing method is forced to wait till all the future objects are returned i.e. all calls are executed
+	    	CompletableFuture.allOf(authorInfo, addressInfo, booksAuthored).join();
+			
+			// after the join, all the furture objects will have the results and can be obtained like below
+	    	Author author = authorInfo.get();
+	    	author.setAddress(addressInfo.get());
+	    	author.setBooksAuthored(booksAuthored.get());
+			
+			When the method being called in annotated as Async, it is best to invoke the method like above.
+			However there might be cases where the exposed API we are calling is not annotated to be Async
+			and since we cannot modify the code base, we need to use AsyncRestTemplate to make asynchronous calls
 		
-		// the executing method is forced to wait till all the future objects are returned i.e. all calls are executed
-    	CompletableFuture.allOf(authorInfo, addressInfo, booksAuthored).join();
-		
-		// after the join, all the furture objects will have the results and can be obtatined like below
-    	Author author = authorInfo.get();
-    	author.setAddress(addressInfo.get());
-    	author.setBooksAuthored(booksAuthored.get());
-		
-		//TODO: Is the below statement true only in case when the calling user wants to wait for the response? If the user is not interested in response and treats it as a fire and forget, then does it matter what is the response?
-		Note: When making a method Async, it is best to return a CompletableFuture object unless a strong reason exists not to do so. The language does not enforce this.
-    
-	    When the method being called in annotated as Async, it is best to invoke the method like above. However there might be cases where the expose API we are calling is not annotated to be Async and since we cannot
-		modify the code base, we need to use AsyncRestTemplate to make asynchronous calls
-		
-		Refer to AuthorService.getAuthorDemographics for examples on how to add callbacks to asychronous calls
+		Refer to AuthorService.getAuthorDemographics for examples on how to add callbacks to asynchronous calls
+
    
-Adding Hystrix fallback
+## Adding Hystrix fallback
 
 	To add a fallback method to a service end points we need to do the following
 	
 	1. Annotate the serivce end point with @HystrixCommand like below
 		
 		@HystrixCommand(fallbackMethod = "getBookByIdReliable")
-		public Author getAuthoredBook(String iddn) {
+		public Author getAuthoredBook(String iddn)
+		The @HystrixCommand(fallbackMethod = "getBookByIdReliable") binds the getBookByIdReliable 
+		as fallback method for getAuthoredBook
 		
-			Author author = new Author("nspark", 35L, 'M');
 
-			Book book = restTemplate.exchange(
-					"http://book-service/book/iddn/{iddn}",
-					HttpMethod.GET,
-					null,
-					Book.class, 
-					iddn).getBody();
-
-			List<Book> books = new ArrayList<Book>();
-			books.add(book);
-			author.setBooksAuthored(books);
-
-			return author;
-		}
-		
-		The @HystrixCommand(fallbackMethod = "getBookByIdReliable") binds the getBookByIdReliable as fallback method for getAuthoredBook
-		
 	2. Add the fallback method with the same method signature as the service end point it is associated to like below
 		
-		public Author getBookByIdReliable(String iddn){
-			
-			Author author = new Author("default", 35L, 'M');
-			Book book = new Book("default", "default", "default", null);
-			List<Book> books = new ArrayList<Book>();
-			books.add(book);
-			author.setBooksAuthored(books);
-			
-			return author;
-		}
+		public Author getBookByIdReliable(String iddn)
+
 	
 	3. In the controller, the service end point is invoked normally like below
 		
@@ -317,10 +326,34 @@ Adding Hystrix fallback
 			return authorService.getAuthoredBook(iddn);
 		}
 	
-	To test this
-	1. Have both author-service and book-service running 
-	2. Invoke the REST end-point, in this example it is http://localhost:8092/author/book/iddn/12345
-	3. Observe the response returned from the book-service
-	4. Bring down/shut down book-service
-	5. Invoke the same rest end point
-	6. Notice that the response now has the values from the fallback method
+
+To test hystrix fall back
+
+		1. Have both author-service and book-service running 
+		2. Invoke the REST end-point, in this example it is http://localhost:8092/author/book/iddn/12345
+		3. Observe the response returned from the book-service
+		4. Bring down/shut down book-service
+		5. Invoke the same rest end point
+		6. Notice that the response now has the values from the fallback method
+	
+   
+## Adding Swagger documentation
+
+To add Swagger documentation to REST end points add the following annotations to the the REST end point
+	
+	 1. At the class level we add the below annotation. This adds default documentation of return type, required input params etc
+	 @Api(value="Author Information", description="This provides the API for retrieving author information")
+	 
+	 2. To add more information to the default documentation generated, we can use the below annotations at method level
+	 @ApiOperation(value = "View author information including books authored and awards received given author name", response = Author.class)
+	 @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Successfully retrieved author"),
+            @ApiResponse(code = 401, message = "You are not authorized to view the resource"),
+            @ApiResponse(code = 403, message = "Accessing the resource you were trying to reach is forbidden"),
+            @ApiResponse(code = 404, message = "The resource you were trying to reach is not found")
+    }
+    )
+     
+     
+	Once the author-service is up the documentation should be available at
+	http://localhost:8092/swagger-ui.html
