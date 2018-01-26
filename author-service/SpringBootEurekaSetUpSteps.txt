@@ -127,10 +127,45 @@ To add Gemfire cache to the service
 
 	1. Edit the pom.xml to add the following dependency
 		<dependency>
-            <groupId>org.springframework.data</groupId>
-            <artifactId>spring-data-gemfire</artifactId>
-      </dependency>
+	        <groupId>org.springframework.data</groupId>
+	        <artifactId>spring-data-gemfire</artifactId>
+	        <version>2.0.3.RELEASE</version>
+	   </dependency>
 	   
+	2. GemFire Configuration
+		The basic minimum set-up needed is below
+		
+		This is the bean definition for the author-information cache
+		@Bean(name="author-information")
+		LocalRegionFactoryBean<String, Author> getEmployee(final GemFireCache cache) {
+			LocalRegionFactoryBean<String, Author> employeeRegion = new LocalRegionFactoryBean<String, Author>();
+			employeeRegion.setCache(cache);
+			employeeRegion.setName("author-information");
+			return employeeRegion;
+		}
+	
+		This are the properties that used to create the cache
+		@Bean
+		Properties gemfireProperties() {
+			Properties gemfireProperties = new Properties();
+			gemfireProperties.setProperty("name","SpringDataGemFireApplication");
+			gemfireProperties.setProperty("mcast-port", "0");
+			gemfireProperties.setProperty("log-level", "config");
+			return gemfireProperties;
+		}
+	
+		This is cache creation
+		@Bean
+		CacheFactoryBean gemfireCache() {
+			CacheFactoryBean gemfireCache = new CacheFactoryBean();
+			gemfireCache.setClose(true);
+			gemfireCache.setProperties(gemfireProperties());
+			return gemfireCache;
+		}
+	   
+	   It is important that where we place the above definitions, that class needs to be annotated with @ClientCacheApplication.
+	   We can define all these beans in the *Application.java as long as the class is annotated with @ClientCacheApplication or
+	   we can define them in a separate configuration file like in this example
 ### Swagger
 
 	1. Edit the pom.xml to add the following dependencies
@@ -315,7 +350,7 @@ To add Gemfire cache to the service
 
 	To add a fallback method to a service end points we need to do the following
 	
-	1. Annotate the serivce end point with @HystrixCommand like below
+	1. Annotate the service end point with @HystrixCommand like below
 		
 		@HystrixCommand(fallbackMethod = "getBookByIdReliable")
 		public Author getAuthoredBook(String iddn)
@@ -336,7 +371,7 @@ To add Gemfire cache to the service
 		}
 	
 
-To test hystrix fall back
+To test Hystrix fall back
 
 		1. Have both author-service and book-service running 
 		2. Invoke the REST end-point, in this example it is http://localhost:8092/author/book/iddn/12345
@@ -345,6 +380,32 @@ To test hystrix fall back
 		5. Invoke the same rest end point
 		6. Notice that the response now has the values from the fallback method
 	
+## Adding GemFire caching
+
+To add GemFire caching we can use the following annotations
+
+	1. @Cachable
+		This annotation tells spring to first go look in the cache bound to the method for the object, if found return it without ever invoking the method.
+		If the object is not found, the method is invoked and the object returned is added to the cache. 
+		The syntax is as below
+		
+		@Cacheable("author-information")
+		public Author getAuthorWithBooks(String name)
+		
+		In the above example, when a service/rest end point makes a call to retrieve author information by the name, we first go look in the 
+		'author-information' cache for author object with the given name, if found it returns the author object. 
+		If not found, the method is invoked and returns the object from the method.
+		Additionally the returned author object is added to the 'author-information', such that all future calls will result in retrieving 
+		this information from the cache, as long as the object is alive and available in the cache.
+		
+	2. @CachePut
+		Unlike the above @Cachable annotation, this annotation does not prompt spring to skip this method. The method is always invoked and the return 
+		from the method invocation is put in the cache bound to the method. 
+		The syntax is as below
+		
+		@CachePut(cacheNames = "author-information", key = "#result.name")
+		public Author addAuthorInformation(String name, Long age, Character gender)
+		
    
 ## Adding Swagger documentation
 
