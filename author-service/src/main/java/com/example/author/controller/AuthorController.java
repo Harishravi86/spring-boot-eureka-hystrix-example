@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 
+import javax.validation.Valid;
+
 import org.apache.commons.lang.time.StopWatch;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +14,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.concurrent.ListenableFuture;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -49,7 +52,7 @@ public class AuthorController {
 	 */
 	// this is an example to make synchronous calls to other microservices
     @RequestMapping(value = "/author/{name}", method = RequestMethod.GET)
-    public Author getAuthorInformationWithBooks(@PathVariable(value="name") String name) {
+    public Author getAuthorInformationWithBooksSynchronous(@PathVariable(value="name") String name) {
     	Author author = new Author(name, 35L, 'M');
     	
     	/* For communication between microservices we can use the microservice application name as defined in the application.yml if that microservice is registered with the Eureka Server.
@@ -100,7 +103,7 @@ public class AuthorController {
 				           }
     )
     @RequestMapping(value = "async/author/{name}", method = RequestMethod.GET)
-    public Author getAuthorInformation(@PathVariable(value="name") String name) throws InterruptedException, ExecutionException {
+    public Author getAuthorInformationWithBooksAsynchronous(@PathVariable(value="name") String name) throws InterruptedException, ExecutionException {
     	Author author = new Author(name, 35L, 'M');
     	StopWatch stopWatch = new StopWatch();
     	stopWatch.start();
@@ -129,7 +132,7 @@ public class AuthorController {
     
     // this is an example of making parallel asynchronous calls using @Async and waiting for the response from all the calls to continue processing
     @RequestMapping(value = "async/author/information/{name}", method = RequestMethod.GET)
-    public Author getAuthorDemographics(@PathVariable(value="name") String name) throws InterruptedException, ExecutionException {
+    public Author getAuthorInformationWithBooksAsyncAnnotation(@PathVariable(value="name") String name) throws InterruptedException, ExecutionException {
     	logger.info("Starting stopWatch");
     	StopWatch stopWatch = new StopWatch();
     	stopWatch.start();
@@ -166,7 +169,20 @@ public class AuthorController {
     
     // This calls a method which has a fallBack enabled with Hystrix
     @RequestMapping(value = "/author/book/iddn/{iddn}", method = RequestMethod.GET)
-    public Author getAuthorInformationWithBook(@PathVariable(value="iddn") String iddn) {
+    public Author getAuthorInformationWithBookIddn(@PathVariable(value="iddn") String iddn) {
     	return authorService.getAuthoredBook(iddn);
     }
+    
+    // tries to get author information from cache is present in cache, else makes calls to the book-service and award-service
+    @RequestMapping(value = "cahce/author/name/{name}", method = RequestMethod.GET)
+    public Author getAuthorInformationFromCache(@PathVariable(value="name") String name) {
+    	return authorService.getAuthorWithBooks(name);
+    }
+    
+    // adds author information to cache
+    @RequestMapping(value = "cahce/author", method = RequestMethod.POST)
+    public Author insertAuthorInformation(@Valid @RequestBody Author author) {
+    	return authorService.addAuthorInformation(author.getName(), author.getAge(), author.getGender());
+    }
+
 }

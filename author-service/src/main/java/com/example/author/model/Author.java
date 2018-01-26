@@ -1,13 +1,19 @@
 package com.example.author.model;
 
+import java.io.Serializable;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
-@JsonInclude(value=Include.NON_NULL)
-public class Author {
 
+@JsonInclude(value=Include.NON_NULL)
+public class Author implements Serializable{
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private String name;
 	private Long age;
 	private char gender;
@@ -15,6 +21,23 @@ public class Author {
 	private List<Award> awardsReceived;
 	private Address address;
 	
+	public Author() {
+		/*needed for 
+		 * "exception": "org.springframework.http.converter.HttpMessageNotReadableException",
+  			"message": "JSON parse error: Can not construct instance of com.example.author.model.Author: no suitable constructor found, can not deserialize from Object value (missing default constructor or creator, or perhaps need to add/enable type information?); nested exception is com.fasterxml.jackson.databind.JsonMappingException: Can not construct instance of com.example.author.model.Author: no suitable constructor found, can not deserialize from Object value (missing default constructor or creator, or perhaps need to add/enable type information?)\n at [Source: java.io.PushbackInputStream@23ba043a; line: 1, column: 2]",
+		 */
+	}
+	
+	
+	
+	@Override
+	public String toString() {
+		return "Author [name=" + name + ", age=" + age + ", gender=" + gender + ", booksAuthored=" + booksAuthored
+				+ ", awardsReceived=" + awardsReceived + ", address=" + address + "]";
+	}
+
+
+
 	public Author(String name, Long age, char gender) {
 		super();
 		this.name = name;

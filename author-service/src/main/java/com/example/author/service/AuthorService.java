@@ -8,6 +8,8 @@ import java.util.function.Function;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
 import org.springframework.scheduling.annotation.Async;
@@ -16,6 +18,7 @@ import org.springframework.web.client.RestTemplate;
 
 import com.example.author.model.Address;
 import com.example.author.model.Author;
+import com.example.author.model.Award;
 import com.example.author.model.Book;
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 
@@ -23,7 +26,7 @@ import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 public class AuthorService {
 
 	private static final Logger logger = Logger.getLogger(AuthorService.class);
-
+	
 	@Autowired
 	private RestTemplate restTemplate;
 
@@ -114,4 +117,37 @@ public class AuthorService {
 		author.setBooksAuthored(books);
 		return author;
 	}
+
+	// will try to retrieve information from cache first, if not present will make the service calls
+	@Cacheable("author-information")
+	public Author getAuthorWithBooks(String name) {
+		logger.info("Getting information from the method and not the cache");
+		Author author = new Author(name, 35L, 'M');
+		List<Book> books = restTemplate.exchange(
+				"http://book-service/book/author/{name}",
+				HttpMethod.GET,
+				null,
+				new ParameterizedTypeReference<List<Book>>() {}, 
+				name).getBody();
+
+		author.setBooksAuthored(books);
+
+		List<Award> awardsReceived = restTemplate.exchange(
+				"http://award-service/award/list/winner/name/{name}",
+				HttpMethod.GET,
+				null,
+				new ParameterizedTypeReference<List<Award>>() {}, 
+				name).getBody();
+
+		author.setAwardsReceived(awardsReceived);
+
+		return author;
+	}
+	
+	// add author created to cache
+	@CachePut(cacheNames = "author-information", key = "#result.name")
+	public Author addAuthorInformation(String name, Long age, Character gender) {
+		return new Author(name, age, gender);
+	}
+	 
 }

@@ -38,7 +38,5 @@ public class Config {
         executor.setQueueCapacity(500);
         executor.initialize();
         return executor;
-    }
-    
-    
+    }    
 }

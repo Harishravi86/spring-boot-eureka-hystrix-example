@@ -121,6 +121,15 @@ To add circuit-breaker/fallbacks to service end points in a microservice
 		
 	2. Edit the *Application.java
 	  	 Make sure the *Application class is annotated with @EnableCircuitBreaker 
+	  	 
+### Gemfire
+To add Gemfire cache to the service
+
+	1. Edit the pom.xml to add the following dependency
+		<dependency>
+            <groupId>org.springframework.data</groupId>
+            <artifactId>spring-data-gemfire</artifactId>
+      </dependency>
 	   
 ### Swagger
 
