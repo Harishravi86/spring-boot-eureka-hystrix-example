@@ -68,7 +68,7 @@ public class AuthorService {
 	@Async("author-executor")
 	public CompletableFuture<List<Book>> getAuthoredBooks(String name) throws InterruptedException {
 		List<Book> books = restTemplate.exchange(
-				"http://book-service/book/author/{name}",
+				"http://book-service/list/book/author/{name}",
 				HttpMethod.GET,
 				null,
 				new ParameterizedTypeReference<List<Book>>() {}, 
@@ -124,7 +124,7 @@ public class AuthorService {
 		logger.info("Getting information from the method and not the cache");
 		Author author = new Author(name, 35L, 'M');
 		List<Book> books = restTemplate.exchange(
-				"http://book-service/book/author/{name}",
+				"http://book-service/list/book/author/{name}",
 				HttpMethod.GET,
 				null,
 				new ParameterizedTypeReference<List<Book>>() {}, 
@@ -133,7 +133,7 @@ public class AuthorService {
 		author.setBooksAuthored(books);
 
 		List<Award> awardsReceived = restTemplate.exchange(
-				"http://award-service/award/list/winner/name/{name}",
+				"http://award-service/list/award/winner/name/{name}",
 				HttpMethod.GET,
 				null,
 				new ParameterizedTypeReference<List<Award>>() {}, 

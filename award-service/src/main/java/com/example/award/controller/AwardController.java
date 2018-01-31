@@ -17,13 +17,13 @@ import com.example.award.model.Award;
 @RestController
 public class AwardController {
 
-	@RequestMapping(value = "/award/list/winner/name/{name}", method = RequestMethod.GET)
+	@RequestMapping(value = "list/award/winner/name/{name}", method = RequestMethod.GET)
 	public List<Award> getAwardByWinnerName(@PathVariable(value="name") String name){
 		List<Award> awards = createAwards(name);
 		return awards;
 	}
 	
-	@RequestMapping(value = "async/award/list/winner/name/{name}", method = RequestMethod.GET)
+	@RequestMapping(value = "async/list/award/winner/name/{name}", method = RequestMethod.GET)
 	public List<Award> getAwardByWinnerNameAsync(@PathVariable(value="name") String name) throws InterruptedException{
 		List<Award> awards = createAwards(name);
 		Thread.sleep(1000l);

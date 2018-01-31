@@ -63,7 +63,7 @@ public class AuthorController {
     	 * Please look at the Book type in author-service in detail.*/
     	
     	List<Book> books = restTemplate.exchange(
-                "http://book-service/book/author/{name}",
+                "http://book-service/list/book/author/{name}",
                 HttpMethod.GET,
                 null,
                 new ParameterizedTypeReference<List<Book>>() {}, 
@@ -78,7 +78,7 @@ public class AuthorController {
     	 * */
     	
     	List<Award> awardsReceived = restTemplate.exchange(
-                "http://award-service/award/list/winner/name/{name}",
+                "http://award-service/list/award/winner/name/{name}",
                 HttpMethod.GET,
                 null,
                 new ParameterizedTypeReference<List<Award>>() {}, 
@@ -108,7 +108,7 @@ public class AuthorController {
     	StopWatch stopWatch = new StopWatch();
     	stopWatch.start();
     	ListenableFuture<ResponseEntity<List<Book>>> future = asyncRestTemplate.exchange(
-                "http://book-service/async/book/author/{name}",
+                "http://book-service/async/list/book/author/{name}",
                 HttpMethod.GET,
                 null,
                 new ParameterizedTypeReference<List<Book>>() {}, 
@@ -116,7 +116,7 @@ public class AuthorController {
     	
 
     	ListenableFuture<ResponseEntity<List<Award>>> awardsReceived = asyncRestTemplate.exchange(
-                "http://award-service/async/award/list/winner/name/{name}",
+                "http://award-service/async/list/award/winner/name/{name}",
                 HttpMethod.GET,
                 null,
                 new ParameterizedTypeReference<List<Award>>() {}, 
